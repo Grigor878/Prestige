@@ -1,45 +1,103 @@
-stages:
-    - client_build
-    - api_deploy
+# stages:
+#     - client_build
+#     - api_deploy
 
-before_script:
-    - chmod 400 "$SSH_KEY"
+# before_script:
+#     - chmod 400 "$SSH_KEY"
 
-variables:
-    CLIENT_PATH: /var/www/prestige-estate/client
-    API_PATH: /var/www/prestige-estate/api
+# variables:
+#     CLIENT_PATH: /var/www/prestige-estate/client
+#     API_PATH: /var/www/prestige-estate/api
 
 
-Building_front:
-    stage: client_build
-    tags:
-        - appointment
-    script:
-        - ssh -o StrictHostKeyChecking=no -i "$SSH_KEY" root@ "
-            cd '$CLIENT_PATH' &&
+# Building_front:
+#     stage: client_build
+#     tags:
+#         - appointment
+#     script:
+#         - ssh -o StrictHostKeyChecking=no -i "$SSH_KEY" root@ "
+#             cd '$CLIENT_PATH' &&
+#             git pull && 
+#             npm install &&
+#             npm run build &&
+#             service nginx restart"
+#     only:
+#         changes:
+#             - main
+#             - client/**/*
+
+# Deploying_api:
+#     stage: api_deploy
+#     tags:
+#         - appointment
+#     script:
+#         - ssh -o StrictHostKeyChecking=no -i "$SSH_KEY" root@ "
+#             cd '$API_PATH' &&
+#             git pull &&
+#             killall gunicorn &&
+#             source venv/bin/activate &&
+#             pip install -r requirements.txt &&
+#             gunicorn --daemon --access-logfile /var/log/gunicorn.access.log --error-logfile /var/log/gunicorn.error.log appt_migration.wsgi:application &&
+#             service nginx restart "
+#     only:
+#         changes:
+#             - main
+#             - api/**/*
+
+
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - client/**
+      - api/**
+
+jobs:
+  build_client:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Set up SSH
+        run: |
+          echo "${{ secrets.SSH_KEY }}" > key.pem
+          chmod 400 key.pem
+
+      - name: Build Client
+        run: |
+          ssh -o StrictHostKeyChecking=no -i key.pem zaqnmbmy@${{ secrets.SERVER_IP }} "
+            cd '/var/www/prestige-estate/client' &&
             git pull && 
             npm install &&
             npm run build &&
             service nginx restart"
-    only:
-        changes:
-            - development
-            - client/**/*
 
-Deploying_api:
-    stage: api_deploy
-    tags:
-        - appointment
-    script:
-        - ssh -o StrictHostKeyChecking=no -i "$SSH_KEY" root@ "
-            cd '$API_PATH' &&
+  deploy_api:
+    runs-on: ubuntu-latest
+    needs: build_client
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Set up SSH
+        run: |
+          echo "${{ secrets.SSH_KEY }}" > key.pem
+          chmod 400 key.pem
+
+      - name: Deploy API
+        run: |
+          ssh -o StrictHostKeyChecking=no -i key.pem zaqnmbmy@${{ secrets.SERVER_IP }} "
+            cd '/var/www/prestige-estate/api' &&
             git pull &&
             killall gunicorn &&
             source venv/bin/activate &&
             pip install -r requirements.txt &&
             gunicorn --daemon --access-logfile /var/log/gunicorn.access.log --error-logfile /var/log/gunicorn.error.log appt_migration.wsgi:application &&
-            service nginx restart "
-    only:
-        changes:
-            - development
-            - api/**/*
+            service nginx restart"
+
