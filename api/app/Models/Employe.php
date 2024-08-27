@@ -19,6 +19,8 @@ class Employe extends Authenticatable implements JWTSubject
         'role',
         'phone',
         'password',
+        'photo',
+        'status'
     ];
 
     protected $hidden = ['password']; 
