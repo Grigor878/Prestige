@@ -39,7 +39,7 @@ jobs:
         ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
           cd ${{ secrets.CLIENT_DIR }}
           git pull
-          npm install
+          npm install -- force
           npm run build
           # Replace with commands to deploy your client if needed
           exit
