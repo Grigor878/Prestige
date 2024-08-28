@@ -6,9 +6,9 @@ import LayoutDash from "../admin/components/layout/LayoutDash"
 import {  useSelector } from "react-redux"
 import AutoScroll from "../helpers/autoScroll"
 
-const Home = lazy(() => pMinDelay(import('../pages/home/Home'), 1000))
-const Result = lazy(() => import('../pages/result/Result'))
-const ResultById = lazy(() => pMinDelay(import('../pages/result/ResultById'), 500))
+// const Home = lazy(() => pMinDelay(import('../pages/home/Home'), 1000))
+// const Result = lazy(() => import('../pages/result/Result'))
+// const ResultById = lazy(() => pMinDelay(import('../pages/result/ResultById'), 500))
 
 const NotFound = lazy(() => import('../pages/404/NotFound'))
 
@@ -39,10 +39,10 @@ const View = () => {
                 <AutoScroll />
                 <Routes>
                     <Route path="/" element={<LayoutMain />}>
-                        <Route index element={<Home />} />
+                        {/* <Route index element={<Home />} />
                         <Route path="result" element={<Result />} />
                         <Route path="result/:id" element={<ResultById />} />
-                        <Route path="*" element={<NotFound />} />
+                        <Route path="*" element={<NotFound />} /> */}
                     </Route>
 
                     <Route path="/login">

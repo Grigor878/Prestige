@@ -13,7 +13,7 @@ import { persistReducer, persistStore } from "redux-persist";
 import thunk from "redux-thunk";
 
 const persistConfig = {
-  key: "aparto",
+  key: "prestige",
   storage: storageSession,
   whitelist: ["auth", "userGlobal", "users", "home", "view"],
   // whitelist: ["auth", "userGlobal", "users"],
