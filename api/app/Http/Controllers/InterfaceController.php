@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Home;
-use App\Services\InterFaceService;
+use App\Services\InterfaceService;
 use Illuminate\Http\Request;
 
 class InterfaceController extends Controller
 {
     protected $interfaceService;
 
-    public function __construct(InterFaceService $interfaceService)
+    public function __construct(InterfaceService $interfaceService)
     {
         $this->interfaceService = $interfaceService;
     }

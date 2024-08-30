@@ -8,7 +8,7 @@ use App\Models\Home;
 use App\Models\RecentSearch;
 use Carbon\Carbon;
 
-class InterFaceService
+class InterfaceService
 {
     public function processHomeData($home)
     {
