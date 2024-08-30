@@ -17,7 +17,7 @@ const HelmetAdmin = () => {
     return (
         <HelmetProvider>
             <Helmet>
-                <title>Aparto {newPath}</title>
+                <title>Prestige {newPath}</title>
             </Helmet>
         </HelmetProvider>
     );
