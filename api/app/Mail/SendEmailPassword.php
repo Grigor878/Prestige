@@ -35,7 +35,7 @@ class SendEmailPassword extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'You have been added to Aparto Team!',
+            subject: 'You have been added to Prestige Team!',
         );
     }
 
